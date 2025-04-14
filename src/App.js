@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import './app.css'
+import './App.css'
 
 function App() {
   const [input, setInput] = useState('');
