@@ -54,8 +54,8 @@ function App() {
       {/* Sidebar */}
       <div className="sidebar">
         <h2 style={{ color: '#00FFFF', marginBottom: '40px' }}>🤖 mausamAI</h2>
-        <p style={{ fontSize: '14px', color: '#aaa' }}>Developed by Team:</p>
-        <p style={{ fontWeight: 'bold', color: '#fff' }}>Aadesh , Swathi , Ashish and Venkatesh</p>
+        <p style={{ fontSize: '14px', color: '#aaa' }}>Developed by</p>
+        <p style={{ fontWeight: 'bold', color: '#fff' }}>Aadesh Shukla</p>
       </div>
   
       {/* Main Chat Area */}
