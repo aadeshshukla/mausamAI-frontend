@@ -6,15 +6,7 @@ function App() {
   const [input, setInput] = useState('');
   const [chat, setChat] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef(null);
   const chatBoxRef = useRef(null);
-
-  // Scroll to bottom function
-  const scrollToBottom = () => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
-  };
 
   // Function to format text with markdown-like syntax
   const formatText = (text) => {
@@ -28,10 +20,8 @@ function App() {
     lines.forEach((line, idx) => {
       const trimmed = line.trim();
       
-      // Handle code blocks
       if (trimmed.startsWith('```')) {
         if (inCodeBlock) {
-          // End code block
           formatted.push(
             <pre key={idx} className="code-block">
               <code>{codeBlockContent.join('\n')}</code>
@@ -40,7 +30,6 @@ function App() {
           codeBlockContent = [];
           inCodeBlock = false;
         } else {
-          // Start code block
           inCodeBlock = true;
         }
         return;
@@ -51,8 +40,7 @@ function App() {
         return;
       }
       
-      // Handle headers
-      if (trimmed.startsWith('###')) {
+      if (trimmed. startsWith('###')) {
         formatted.push(
           <h3 key={idx} className="formatted-header">
             {trimmed.replace(/^###\s*/, '')}
@@ -70,33 +58,25 @@ function App() {
             {trimmed.replace(/^#\s*/, '')}
           </h2>
         );
-      }
-      // Handle bullet points
-      else if (trimmed.match(/^[\*\-]\s/)) {
+      } else if (trimmed.match(/^[\*\-]\s/)) {
         formatted.push(
           <li key={idx} className="formatted-list">
             {formatInlineMarkdown(trimmed. replace(/^[\*\-]\s/, ''))}
           </li>
         );
-      }
-      // Handle numbered lists
-      else if (trimmed.match(/^\d+\.\s/)) {
+      } else if (trimmed.match(/^\d+\.\s/)) {
         formatted.push(
           <li key={idx} className="formatted-list numbered">
             {formatInlineMarkdown(trimmed.replace(/^\d+\.\s/, ''))}
           </li>
         );
-      }
-      // Handle bold lines (entire line wrapped in **)
-      else if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
+      } else if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
         formatted.push(
           <p key={idx} className="formatted-bold">
             {trimmed.replace(/\*\*/g, '')}
           </p>
         );
-      }
-      // Handle regular paragraphs with inline formatting
-      else if (trimmed) {
+      } else if (trimmed) {
         formatted.push(
           <p key={idx} className="formatted-paragraph">
             {formatInlineMarkdown(line)}
@@ -110,13 +90,12 @@ function App() {
     return formatted;
   };
 
-  // Helper function to format inline markdown (**, *, `)
   const formatInlineMarkdown = (text) => {
     const parts = text.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`)/g);
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         return <strong key={i}>{part.slice(2, -2)}</strong>;
-      } else if (part.startsWith('*') && part.endsWith('*') && !part.startsWith('**')) {
+      } else if (part.startsWith('*') && part.endsWith('*') && ! part.startsWith('**')) {
         return <em key={i}>{part.slice(1, -1)}</em>;
       } else if (part. startsWith('`') && part.endsWith('`')) {
         return <code key={i} className="inline-code">{part.slice(1, -1)}</code>;
@@ -168,9 +147,13 @@ function App() {
     setChat([]);
   };
 
-  // Auto-scroll whenever chat or typing status changes
+  // THIS IS THE FIX - Scroll after DOM updates
   useEffect(() => {
-    scrollToBottom();
+    if (chatBoxRef.current) {
+      setTimeout(() => {
+        chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+      }, 100);
+    }
   }, [chat, isTyping]);
 
   return (
@@ -240,8 +223,6 @@ function App() {
               </div>
             </div>
           )}
-          
-          <div ref={messagesEndRef} />
         </div>
   
         <div className="input-area">
@@ -254,8 +235,8 @@ function App() {
           />
           <button 
             onClick={handleSend} 
-            disabled={!input. trim() || isTyping}
-            className={input.trim() && !isTyping ? 'active' : ''}
+            disabled={! input.trim() || isTyping}
+            className={input.trim() && ! isTyping ? 'active' : ''}
           >
             {isTyping ? '⏳' : '📤'}
           </button>
