@@ -8,6 +8,115 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // Function to format text with markdown-like syntax
+  const formatText = (text) => {
+    if (!text) return text;
+
+    const lines = text.split('\n');
+    const formatted = [];
+    let inCodeBlock = false;
+    let codeBlockContent = [];
+
+    lines.forEach((line, idx) => {
+      const trimmed = line.trim();
+      
+      // Handle code blocks
+      if (trimmed.startsWith('```')) {
+        if (inCodeBlock) {
+          // End code block
+          formatted.push(
+            <pre key={idx} className="code-block">
+              <code>{codeBlockContent.join('\n')}</code>
+            </pre>
+          );
+          codeBlockContent = [];
+          inCodeBlock = false;
+        } else {
+          // Start code block
+          inCodeBlock = true;
+        }
+        return;
+      }
+
+      if (inCodeBlock) {
+        codeBlockContent.push(line);
+        return;
+      }
+      
+      // Handle headers
+      if (trimmed.startsWith('###')) {
+        formatted.push(
+          <h3 key={idx} className="formatted-header">
+            {trimmed.replace(/^###\s*/, '')}
+          </h3>
+        );
+      } else if (trimmed.startsWith('##')) {
+        formatted.push(
+          <h4 key={idx} className="formatted-subheader">
+            {trimmed.replace(/^##\s*/, '')}
+          </h4>
+        );
+      } else if (trimmed.startsWith('#')) {
+        formatted.push(
+          <h2 key={idx} className="formatted-title">
+            {trimmed.replace(/^#\s*/, '')}
+          </h2>
+        );
+      }
+      // Handle bullet points
+      else if (trimmed. match(/^[\*\-]\s/)) {
+        formatted.push(
+          <li key={idx} className="formatted-list">
+            {formatInlineMarkdown(trimmed. replace(/^[\*\-]\s/, ''))}
+          </li>
+        );
+      }
+      // Handle numbered lists
+      else if (trimmed.match(/^\d+\.\s/)) {
+        formatted.push(
+          <li key={idx} className="formatted-list numbered">
+            {formatInlineMarkdown(trimmed.replace(/^\d+\.\s/, ''))}
+          </li>
+        );
+      }
+      // Handle bold lines (entire line wrapped in **)
+      else if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
+        formatted.push(
+          <p key={idx} className="formatted-bold">
+            {trimmed.replace(/\*\*/g, '')}
+          </p>
+        );
+      }
+      // Handle regular paragraphs with inline formatting
+      else if (trimmed) {
+        formatted.push(
+          <p key={idx} className="formatted-paragraph">
+            {formatInlineMarkdown(line)}
+          </p>
+        );
+      } else {
+        formatted.push(<br key={idx} />);
+      }
+    });
+
+    return formatted;
+  };
+
+  // Helper function to format inline markdown (**, *, `)
+  const formatInlineMarkdown = (text) => {
+    const parts = text.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={i}>{part.slice(2, -2)}</strong>;
+      } else if (part.startsWith('*') && part.endsWith('*') && ! part.startsWith('**')) {
+        return <em key={i}>{part.slice(1, -1)}</em>;
+      } else if (part. startsWith('`') && part.endsWith('`')) {
+        return <code key={i} className="inline-code">{part.slice(1, -1)}</code>;
+      }
+      return part;
+    });
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -30,15 +139,15 @@ function App() {
       const botMsg = {
         sender: 'bot',
         text: res.data.reply,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        time: new Date().toLocaleTimeString([], { hour:  '2-digit', minute: '2-digit' })
       };
 
-      setChat(prev => [...prev, botMsg]);
+      setChat(prev => [... prev, botMsg]);
     } catch (err) {
       console.error(err);
       setChat(prev => [...prev, {
         sender: 'bot',
-        text: '😢 Oops! Something went wrong. Please try again.',
+        text: '😢 Oops! Something went wrong.  Please try again.',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isError: true
       }]);
@@ -71,7 +180,7 @@ function App() {
             <p className="name">Aadesh Shukla</p>
           </div>
           
-          {chat.length > 0 && (
+          {chat. length > 0 && (
             <button className="clear-btn" onClick={handleClearChat}>
               🗑️ Clear Chat
             </button>
@@ -79,7 +188,7 @@ function App() {
         </div>
 
         <div className="sidebar-footer">
-          <p className="powered-by">Powered by Mistral AI</p>
+          <p className="powered-by">Powered by Groq AI</p>
         </div>
       </div>
   
@@ -92,19 +201,21 @@ function App() {
         <div className="chat-box">
           {chat.length === 0 && (
             <div className="welcome-message">
-              <h2>👋 Welcome to mausamAI!</h2>
+              <h2>👋 Welcome to mausamAI! </h2>
               <p>I'm here to help you.  Ask me anything! </p>
             </div>
           )}
 
           {chat.map((msg, i) => (
             <div key={i} className={`message-wrapper ${msg.sender}`}>
-              <div className={`message ${msg.sender} ${msg.isError ? 'error' : ''}`}>
+              <div className={`message ${msg.sender} ${msg. isError ? 'error' :  ''}`}>
                 <div className="message-header">
                   <strong>{msg.sender === 'user' ? 'You' : 'mausamAI'}</strong>
                   <span className="time">{msg. time}</span>
                 </div>
-                <div className="message-text">{msg.text}</div>
+                <div className="message-text">
+                  {msg.sender === 'bot' && ! msg.isError ?  formatText(msg.text) : msg.text}
+                </div>
               </div>
             </div>
           ))}
@@ -137,7 +248,7 @@ function App() {
             disabled={! input.trim() || isTyping}
             className={input.trim() && !isTyping ? 'active' : ''}
           >
-            {isTyping ? '⏳' : '📤'}
+            {isTyping ?  '⏳' : '📤'}
           </button>
         </div>
       </div>
