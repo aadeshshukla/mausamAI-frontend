@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import './App.css'
+import './App.css';
 
 function App() {
   const [input, setInput] = useState('');
@@ -18,12 +18,14 @@ function App() {
     };
 
     setChat(prev => [...prev, userMsg]);
+    const currentInput = input;
     setInput('');
     setIsTyping(true);
 
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/chat`, { message: input });
-
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/chat`, { 
+        message: currentInput 
+      });
 
       const botMsg = {
         sender: 'bot',
@@ -36,12 +38,17 @@ function App() {
       console.error(err);
       setChat(prev => [...prev, {
         sender: 'bot',
-        text: 'Something went wrong 😢',
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        text: '😢 Oops! Something went wrong. Please try again.',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isError: true
       }]);
     }
 
     setIsTyping(false);
+  };
+
+  const handleClearChat = () => {
+    setChat([]);
   };
 
   useEffect(() => {
@@ -53,26 +60,67 @@ function App() {
       
       {/* Sidebar */}
       <div className="sidebar">
-        <h2 style={{ color: '#00FFFF', marginBottom: '40px' }}>🤖 mausamAI</h2>
-        <p style={{ fontSize: '14px', color: '#aaa' }}>Developed by</p>
-        <p style={{ fontWeight: 'bold', color: '#fff' }}>Aadesh Shukla</p>
+        <div className="sidebar-header">
+          <h2 className="app-title">🤖 mausamAI</h2>
+          <p className="app-subtitle">Your AI Assistant</p>
+        </div>
+        
+        <div className="sidebar-content">
+          <div className="developer-info">
+            <p className="label">Developed by</p>
+            <p className="name">Aadesh Shukla</p>
+          </div>
+          
+          {chat.length > 0 && (
+            <button className="clear-btn" onClick={handleClearChat}>
+              🗑️ Clear Chat
+            </button>
+          )}
+        </div>
+
+        <div className="sidebar-footer">
+          <p className="powered-by">Powered by Mistral AI</p>
+        </div>
       </div>
   
       {/* Main Chat Area */}
       <div className="chat-area">
+        <div className="chat-header">
+          <h3>Chat with mausamAI</h3>
+        </div>
+
         <div className="chat-box">
-          {chat.map((msg, i) => (
-            <div key={i} className={`message ${msg.sender}`}>
-              <div><strong>{msg.sender === 'user' ? 'You' : 'mausamAI'}</strong></div>
-              <div>{msg.text}</div>
-              <div className="time">{msg.time}</div>
-            </div>
-          ))}
-          {isTyping && (
-            <div className="message bot">
-              <i>mausamAI is typing...</i>
+          {chat.length === 0 && (
+            <div className="welcome-message">
+              <h2>👋 Welcome to mausamAI!</h2>
+              <p>I'm here to help you.  Ask me anything! </p>
             </div>
           )}
+
+          {chat.map((msg, i) => (
+            <div key={i} className={`message-wrapper ${msg.sender}`}>
+              <div className={`message ${msg.sender} ${msg.isError ? 'error' : ''}`}>
+                <div className="message-header">
+                  <strong>{msg.sender === 'user' ? 'You' : 'mausamAI'}</strong>
+                  <span className="time">{msg. time}</span>
+                </div>
+                <div className="message-text">{msg.text}</div>
+              </div>
+            </div>
+          ))}
+
+          {isTyping && (
+            <div className="message-wrapper bot">
+              <div className="message bot typing">
+                <div className="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div ref={messagesEndRef} />
         </div>
   
@@ -80,16 +128,21 @@ function App() {
           <input
             value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSend()}
-            placeholder="Type a message..."
+            onKeyDown={e => e.key === 'Enter' && ! e.shiftKey && handleSend()}
+            placeholder="Type your message..."
+            disabled={isTyping}
           />
-          <button onClick={handleSend}>Send</button>
+          <button 
+            onClick={handleSend} 
+            disabled={! input.trim() || isTyping}
+            className={input.trim() && !isTyping ? 'active' : ''}
+          >
+            {isTyping ? '⏳' : '📤'}
+          </button>
         </div>
       </div>
     </div>
   );
-  
-
 }
 
 export default App;
