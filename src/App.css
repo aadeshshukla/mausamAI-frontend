@@ -1,7 +1,7 @@
 /* Reset and full screen layout */
 html, body, #root {
     height: 100%;
-    margin: 0;
+    margin:  0;
     padding: 0;
     background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
     color: #f1f1f1;
@@ -31,19 +31,19 @@ html, body, #root {
   }
   
   .sidebar-header {
-    margin-bottom: 30px;
+    margin-bottom:  30px;
   }
   
   .app-title {
-    color: #00FFFF;
-    margin: 0 0 10px 0;
-    font-size: 28px;
-    font-weight:  700;
+    color:  #00FFFF;
+    margin:  0 0 10px 0;
+    font-size:  28px;
+    font-weight: 700;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
   }
   
   .app-subtitle {
-    color: #888;
+    color:  #888;
     margin: 0;
     font-size: 14px;
     font-weight:  400;
@@ -56,15 +56,15 @@ html, body, #root {
   .developer-info {
     background: rgba(255, 255, 255, 0.05);
     padding: 20px;
-    border-radius:  10px;
-    margin-bottom:  20px;
-    border:  1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .developer-info .label {
     font-size: 12px;
     color: #aaa;
-    margin:  0 0 5px 0;
+    margin: 0 0 5px 0;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
@@ -78,14 +78,14 @@ html, body, #root {
   
   .clear-btn {
     width: 100%;
-    padding:  12px;
-    background:  rgba(255, 59, 48, 0.1);
+    padding: 12px;
+    background: rgba(255, 59, 48, 0.1);
     color: #ff3b30;
     border: 1px solid rgba(255, 59, 48, 0.3);
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    font-weight:  600;
+    font-weight: 600;
     transition: all 0.3s ease;
   }
   
@@ -97,14 +97,14 @@ html, body, #root {
   .sidebar-footer {
     margin-top: auto;
     padding-top: 20px;
-    border-top: 1px solid #333;
+    border-top:  1px solid #333;
   }
   
   .powered-by {
     font-size: 12px;
     color: #666;
     text-align: center;
-    margin:  0;
+    margin: 0;
   }
   
   /* Chat area */
@@ -112,7 +112,7 @@ html, body, #root {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #121212;
+    background:  #121212;
   }
   
   .chat-header {
@@ -125,14 +125,16 @@ html, body, #root {
     margin: 0;
     color: #fff;
     font-size: 20px;
-    font-weight:  600;
+    font-weight: 600;
   }
   
   .chat-box {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 30px;
     background: #121212;
+    scroll-behavior: smooth;
   }
   
   .chat-box::-webkit-scrollbar {
@@ -166,7 +168,7 @@ html, body, #root {
   
   .welcome-message p {
     color: #888;
-    font-size: 18px;
+    font-size:  18px;
   }
   
   @keyframes fadeIn {
@@ -203,7 +205,7 @@ html, body, #root {
   .message.user {
     background: linear-gradient(135deg, #0066ff 0%, #00bfff 100%);
     color: #fff;
-    border-bottom-right-radius: 4px;
+    border-bottom-right-radius:  4px;
   }
   
   .message.bot {
@@ -222,8 +224,8 @@ html, body, #root {
   .message-header {
     display: flex;
     justify-content: space-between;
-    align-items:  center;
-    margin-bottom:  8px;
+    align-items: center;
+    margin-bottom: 8px;
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
@@ -248,14 +250,15 @@ html, body, #root {
     font-size: 15px;
     line-height:  1.6;
     word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   /* Formatted text styles */
   .formatted-title {
     color: #00FFFF;
     font-size: 20px;
-    font-weight: 700;
-    margin:  14px 0 10px 0;
+    font-weight:  700;
+    margin: 14px 0 10px 0;
     border-bottom: 2px solid #00FFFF;
     padding-bottom: 6px;
   }
@@ -303,7 +306,7 @@ html, body, #root {
     color: #00FFFF;
     padding: 2px 6px;
     border-radius:  4px;
-    font-family: 'Courier New', Consolas, monospace;
+    font-family:  'Courier New', Consolas, monospace;
     font-size: 0.9em;
     border: 1px solid rgba(0, 255, 255, 0.3);
   }
@@ -349,7 +352,7 @@ html, body, #root {
   .typing-indicator span {
     width: 8px;
     height: 8px;
-    border-radius: 50%;
+    border-radius:  50%;
     background: #00ff88;
     animation: typing 1.4s infinite;
   }
@@ -431,50 +434,70 @@ html, body, #root {
   }
   
   .input-area button:disabled {
-    opacity: 0.4;
+    opacity:  0.4;
     cursor: not-allowed;
     background: #333;
     box-shadow: none;
   }
   
-  /* Mobile layout */
+  /* Mobile layout - Optimized for phones */
   @media (max-width: 768px) {
     .app-container {
       flex-direction: column;
     }
   
+    /* Compact sidebar for mobile */
     .sidebar {
       width: 100%;
+      padding: 12px 15px;
       border-right: none;
       border-bottom: 1px solid #333;
-      padding: 20px;
       flex-direction: row;
-      flex-wrap: wrap;
-      gap: 15px;
       align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      min-height: auto;
     }
   
     .sidebar-header {
       margin:  0;
+      flex-shrink: 0;
     }
   
     .app-title {
-      font-size: 22px;
+      font-size: 18px;
+      margin: 0;
+    }
+  
+    .app-subtitle {
+      font-size:  11px;
     }
   
     .sidebar-content {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
+      flex-shrink: 1;
     }
   
     .developer-info {
       margin:  0;
-      padding: 10px 15px;
+      padding: 6px 10px;
+      border-radius:  6px;
+    }
+  
+    .developer-info .label {
+      font-size: 9px;
+      margin: 0;
+    }
+  
+    .developer-info .name {
+      font-size: 11px;
     }
   
     .clear-btn {
-      padding: 8px 16px;
+      padding:  6px 12px;
+      font-size: 12px;
       width: auto;
       white-space: nowrap;
     }
@@ -483,25 +506,158 @@ html, body, #root {
       display: none;
     }
   
+    /* Compact chat header */
+    .chat-header {
+      padding: 12px 15px;
+    }
+  
+    .chat-header h3 {
+      font-size: 16px;
+    }
+  
+    /* Optimized chat area */
     .chat-box {
-      padding: 15px;
+      padding: 15px 10px;
+    }
+  
+    .welcome-message {
+      margin-top: 50px;
+    }
+  
+    .welcome-message h2 {
+      font-size: 22px;
+    }
+  
+    .welcome-message p {
+      font-size: 14px;
+    }
+  
+    .message-wrapper {
+      margin-bottom: 12px;
     }
   
     .message {
       max-width: 85%;
-    }
-  
-    .input-area {
-      padding: 15px;
-    }
-  
-    .input-area input {
-      padding: 12px 16px;
+      padding: 10px 14px;
       font-size: 14px;
     }
   
+    .message-header {
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+    }
+  
+    .message-header strong {
+      font-size: 11px;
+    }
+  
+    .time {
+      font-size: 9px;
+    }
+  
+    .message-text {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  
+    /* Formatted text - smaller on mobile */
+    .formatted-title {
+      font-size: 16px;
+      margin: 10px 0 6px 0;
+    }
+  
+    .formatted-header {
+      font-size: 15px;
+      margin: 8px 0 5px 0;
+    }
+  
+    .formatted-subheader {
+      font-size: 14px;
+      margin: 6px 0 4px 0;
+    }
+  
+    .formatted-paragraph {
+      font-size: 14px;
+      margin: 4px 0;
+    }
+  
+    .formatted-list {
+      font-size: 14px;
+      margin: 3px 0 3px 15px;
+    }
+  
+    .inline-code {
+      font-size: 12px;
+      padding: 1px 4px;
+    }
+  
+    .code-block {
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 12px;
+    }
+  
+    .code-block code {
+      font-size: 12px;
+    }
+  
+    /* Compact input area */
+    .input-area {
+      padding: 10px 12px;
+      gap: 8px;
+    }
+  
+    .input-area input {
+      padding: 10px 14px;
+      font-size: 14px;
+      border-radius: 20px;
+    }
+  
     .input-area button {
-      padding: 12px 20px;
-      min-width: 60px;
+      padding: 10px 16px;
+      font-size: 16px;
+      min-width: 50px;
+      border-radius: 20px;
+    }
+  
+    /* Typing indicator - smaller */
+    .message.typing {
+      padding: 12px;
+    }
+  
+    .typing-indicator span {
+      width: 6px;
+      height: 6px;
+    }
+  }
+  
+  /* Extra small phones */
+  @media (max-width:  400px) {
+    .app-title {
+      font-size: 16px;
+    }
+  
+    .message {
+      max-width: 90%;
+      padding: 8px 12px;
+    }
+  
+    .message-text {
+      font-size: 13px;
+    }
+  
+    .formatted-paragraph,
+    .formatted-list {
+      font-size: 13px;
+    }
+  
+    .input-area input {
+      font-size: 13px;
+      padding: 8px 12px;
+    }
+  
+    .input-area button {
+      padding: 8px 14px;
+      font-size: 14px;
     }
   }

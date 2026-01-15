@@ -7,6 +7,14 @@ function App() {
   const [chat, setChat] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+  const chatBoxRef = useRef(null);
+
+  // Scroll to bottom function
+  const scrollToBottom = () => {
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+  };
 
   // Function to format text with markdown-like syntax
   const formatText = (text) => {
@@ -64,7 +72,7 @@ function App() {
         );
       }
       // Handle bullet points
-      else if (trimmed. match(/^[\*\-]\s/)) {
+      else if (trimmed.match(/^[\*\-]\s/)) {
         formatted.push(
           <li key={idx} className="formatted-list">
             {formatInlineMarkdown(trimmed. replace(/^[\*\-]\s/, ''))}
@@ -108,7 +116,7 @@ function App() {
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         return <strong key={i}>{part.slice(2, -2)}</strong>;
-      } else if (part.startsWith('*') && part.endsWith('*') && ! part.startsWith('**')) {
+      } else if (part.startsWith('*') && part.endsWith('*') && !part.startsWith('**')) {
         return <em key={i}>{part.slice(1, -1)}</em>;
       } else if (part. startsWith('`') && part.endsWith('`')) {
         return <code key={i} className="inline-code">{part.slice(1, -1)}</code>;
@@ -118,7 +126,7 @@ function App() {
   };
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (! input.trim()) return;
 
     const userMsg = {
       sender: 'user',
@@ -139,15 +147,15 @@ function App() {
       const botMsg = {
         sender: 'bot',
         text: res.data.reply,
-        time: new Date().toLocaleTimeString([], { hour:  '2-digit', minute: '2-digit' })
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
-      setChat(prev => [... prev, botMsg]);
+      setChat(prev => [...prev, botMsg]);
     } catch (err) {
       console.error(err);
       setChat(prev => [...prev, {
         sender: 'bot',
-        text: '😢 Oops! Something went wrong.  Please try again.',
+        text: '😢 Oops! Something went wrong. Please try again.',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isError: true
       }]);
@@ -160,8 +168,9 @@ function App() {
     setChat([]);
   };
 
+  // Auto-scroll whenever chat or typing status changes
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    scrollToBottom();
   }, [chat, isTyping]);
 
   return (
@@ -180,7 +189,7 @@ function App() {
             <p className="name">Aadesh Shukla</p>
           </div>
           
-          {chat. length > 0 && (
+          {chat.length > 0 && (
             <button className="clear-btn" onClick={handleClearChat}>
               🗑️ Clear Chat
             </button>
@@ -198,20 +207,20 @@ function App() {
           <h3>Chat with mausamAI</h3>
         </div>
 
-        <div className="chat-box">
+        <div className="chat-box" ref={chatBoxRef}>
           {chat.length === 0 && (
             <div className="welcome-message">
-              <h2>👋 Welcome to mausamAI! </h2>
+              <h2>👋 Welcome to mausamAI!</h2>
               <p>I'm here to help you.  Ask me anything! </p>
             </div>
           )}
 
           {chat.map((msg, i) => (
             <div key={i} className={`message-wrapper ${msg.sender}`}>
-              <div className={`message ${msg.sender} ${msg. isError ? 'error' :  ''}`}>
+              <div className={`message ${msg.sender} ${msg.isError ? 'error' : ''}`}>
                 <div className="message-header">
                   <strong>{msg.sender === 'user' ? 'You' : 'mausamAI'}</strong>
-                  <span className="time">{msg. time}</span>
+                  <span className="time">{msg.time}</span>
                 </div>
                 <div className="message-text">
                   {msg.sender === 'bot' && ! msg.isError ?  formatText(msg.text) : msg.text}
@@ -245,10 +254,10 @@ function App() {
           />
           <button 
             onClick={handleSend} 
-            disabled={! input.trim() || isTyping}
+            disabled={!input. trim() || isTyping}
             className={input.trim() && !isTyping ? 'active' : ''}
           >
-            {isTyping ?  '⏳' : '📤'}
+            {isTyping ? '⏳' : '📤'}
           </button>
         </div>
       </div>
