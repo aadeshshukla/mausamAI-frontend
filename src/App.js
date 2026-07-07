@@ -6,6 +6,7 @@ function App() {
   const [input, setInput] = useState('');
   const [chat, setChat] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [sessionId, setSessionId] = useState(() => localStorage.getItem('mausamai_session_id') || null);
   const chatBoxRef = useRef(null);
 
   // Function to format text with markdown-like syntax
@@ -120,8 +121,14 @@ function App() {
 
     try {
       const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/chat`, { 
-        message: currentInput 
+        message: currentInput,
+        sessionId
       });
+
+      if (res.data.sessionId && res.data.sessionId !== sessionId) {
+        setSessionId(res.data.sessionId);
+        localStorage.setItem('mausamai_session_id', res.data.sessionId);
+      }
 
       const botMsg = {
         sender: 'bot',
@@ -143,8 +150,17 @@ function App() {
     setIsTyping(false);
   };
 
-  const handleClearChat = () => {
+  const handleClearChat = async () => {
     setChat([]);
+    if (sessionId) {
+      try {
+        await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/chat/session/${sessionId}`);
+      } catch (err) {
+        console.error('Failed to clear backend session:', err);
+      }
+    }
+    localStorage.removeItem('mausamai_session_id');
+    setSessionId(null);
   };
 
   // THIS IS THE FIX - Scroll after DOM updates
