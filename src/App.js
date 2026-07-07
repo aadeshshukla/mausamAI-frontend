@@ -41,7 +41,7 @@ function App() {
         return;
       }
       
-      if (trimmed. startsWith('###')) {
+      if (trimmed.startsWith('###')) {
         formatted.push(
           <h3 key={idx} className="formatted-header">
             {trimmed.replace(/^###\s*/, '')}
@@ -59,10 +59,10 @@ function App() {
             {trimmed.replace(/^#\s*/, '')}
           </h2>
         );
-      } else if (trimmed.match(/^[\*\-]\s/)) {
+      } else if (trimmed.match(/^[*-]\s/)) {
         formatted.push(
           <li key={idx} className="formatted-list">
-            {formatInlineMarkdown(trimmed. replace(/^[\*\-]\s/, ''))}
+            {formatInlineMarkdown(trimmed.replace(/^[*-]\s/, ''))}
           </li>
         );
       } else if (trimmed.match(/^\d+\.\s/)) {
@@ -98,7 +98,7 @@ function App() {
         return <strong key={i}>{part.slice(2, -2)}</strong>;
       } else if (part.startsWith('*') && part.endsWith('*') && ! part.startsWith('**')) {
         return <em key={i}>{part.slice(1, -1)}</em>;
-      } else if (part. startsWith('`') && part.endsWith('`')) {
+      } else if (part.startsWith('`') && part.endsWith('`')) {
         return <code key={i} className="inline-code">{part.slice(1, -1)}</code>;
       }
       return part;
